@@ -1,9 +1,6 @@
 <h2 align="center">
  <br>
- <img src="https://i.imgur.com/f1C7EdN.png" alt="AI Voice StockBot Powered by Groq with Tool Use and Generative UI" width="250">
- <br>
- <br>
-Talk to Alice, an AI Voice Agent Providing Real-Time Stock Market Answers with Interactive Charts, Spreadsheets, and More!
+Meet your Voice-Enabled AI Math Tutor That Renders Live Problems and Instruction with LaTeX in Seconds!
  <br>
 </h2>
 
@@ -18,42 +15,25 @@ Talk to Alice, an AI Voice Agent Providing Real-Time Stock Market Answers with I
 <br>
 
 
-https://github.com/user-attachments/assets/3bcd4562-5a14-42fd-a89c-164bccdf76d5
+https://github.com/user-attachments/assets/24abe05a-ee6f-49d8-bdfc-13214b8d3d54
 
 
 ## Overview
 
-Voice StockBot is an AI-powered voice chatbot that leverages 8090's xRx framework, Whisper and Llama3 70b on Groq, TTS on Elevenlabs, Polygon.io's stock API, and TradingView’s live widgets to respond in conversation with the user with live, interactive charts and interfaces specifically tailored to your requests. Groq's speed makes tool calling and providing a response near instantaneous, allowing for a sequence of two API calls with separate specialized prompts to return a response.
+Math Tutor on Groq is an AI-powered voice chatbot that leverages 8090's xRx framework, Whisper and Llama3 70b on Groq, and TTS on Elevenlabs to respond in conversation with the student with live LaTeX and Markdown-formatted equations and notes specifically tailored to the student's requests. Groq's speed makes providing a complex response near instantaneous, enabling a seamless experience.
 
 > [!IMPORTANT]
->  Note: StockBot may provide inaccurate information and does not provide investment advice. It is for entertainment and instructional use only.
-
-## Features
-
-- 🤖 **Real-time AI Voice Chatbot**: Engage with AI powered by Llama3 70b to request stock news, information, and charts through talking directly with the agent
-- 📊 **Interactive Stock Charts**: Receive near-instant, context-aware responses with interactive TradingView charts that host live data
-- 🔄 **Adaptive Interface**: Dynamically render TradingView UI components for financial interfaces tailored to your specific query
-- ⚡ **Groq-Powered Performance**: Leverage Groq's cutting-edge inference technology for near-instantaneous responses and seamless user experience
-- 🌐 **Multi-Asset Market Coverage**: Access comprehensive data and analysis across stocks, forex, bonds, and cryptocurrencies
-
-## Example Interfaces
-| Description | Widget |
-|-------------|--------|
-| **Breakdown of Financial Data for Stocks**<br>Get detailed financial metrics and key performance indicators for any stock. | ![Breakdown of Financial Data for Stocks](https://github.com/user-attachments/assets/272dfae2-4911-43c1-8fdc-e7af0fa9ff1d) |
-| **Show Current Price of Stocks**<br>Track and compare the price of stocks over the past day. | ![Price of Stocks](https://github.com/user-attachments/assets/eaf06277-ed76-4220-a164-a06d878bacbd) |
-| **Financial Data in Spreadsheets**<br>Create spreadsheets of financial data for any public company | ![Financial Data](https://github.com/user-attachments/assets/697adbbe-98a8-4ba2-a412-0e291e0d5aff) |
-| **Compare Price History of Company With Industry Competitors**<br>Track and compare the historical prices of companies in the same industry together. | ![Price History of Stocks](https://github.com/user-attachments/assets/27fe8f31-a64f-4cb7-8f48-c64589400cd1) |
-| **Heatmap of Daily Market Performance**<br>Visualize market trends at a glance with an interactive heatmap. | ![Heatmap of Daily Market Performance](https://github.com/user-attachments/assets/3e22d79b-b07c-4f9a-bc59-c93d6c27c3da) |
+>  Note: Math Tutor has not been equipped with a calculator yet, so information can be imperfect. Additional accuracy and features coming soon!
 
 ## Quickstart
 
 > [!IMPORTANT]
-> To use StockBot, you can use a hosted version at [coming soon](/#).
-> Alternatively, you can run Voice StockBot locally using the quickstart instructions.
+> To use Math Tutor, you can use a hosted version at [coming soon](/#).
+> Alternatively, you can run Math Tutor locally using the quickstart instructions.
 
 1. **Clone the Repository**
    ```bash
-   git clone --recursive https://github.com/bklieger-groq/voice-stockbot.git
+   git clone --recursive https://github.com/bklieger-groq/mathtutor-on-groq.git
    ```
    *The recursive flag ensures the xRx library is downloaded as well.*
 
