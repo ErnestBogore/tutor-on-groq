@@ -1,6 +1,6 @@
 <h2 align="center">
  <br>
-Meet your Voice-Enabled AI Math Tutor That Renders Live Problems and Instruction with LaTeX in Seconds!
+Voice-Enabled AI Math Tutor That Calculates and Renders Live Problems and Instruction with LaTeX in Seconds!
  <br>
 </h2>
 
@@ -20,10 +20,9 @@ https://github.com/user-attachments/assets/24abe05a-ee6f-49d8-bdfc-13214b8d3d54
 
 ## Overview
 
-Math Tutor on Groq is an AI-powered voice chatbot that leverages 8090's xRx framework, Whisper and Llama3 70b on Groq, and TTS on Elevenlabs to respond in conversation with the student with live LaTeX and Markdown-formatted equations and notes specifically tailored to the student's requests. Groq's speed makes providing a complex response near instantaneous, enabling a seamless experience.
+Math Tutor on Groq is an AI-powered voice chatbot that leverages 8090's xRx framework, Whisper and Llama 3.3 70b on Groq, and TTS on Elevenlabs to respond in conversation with the student with live LaTeX and Markdown-formatted equations and notes specifically tailored to the student's requests. Groq's speed makes providing a complex response near instantaneous, enabling a seamless experience.
 
-> [!IMPORTANT]
->  Note: Math Tutor has not been equipped with a calculator yet, so information can be imperfect. Additional accuracy and features coming soon!
+The speed also enables algebra and calculus problems to first be solved via an internal math engine, then providing the solution as context to the AI, increasing accuracy of the response.
 
 ## Quickstart
 

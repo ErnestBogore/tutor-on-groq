@@ -8,11 +8,10 @@ import copy
 from agent_framework import observability_decorator
 from agent_framework import initialize_llm_client
 from .context_manager import set_session, session_var
-# from .utils.stock_utils import (
-#     get_stock_fundamentals,
-#     get_stock_financials,
-#     initialize_polygon_client,
-# )
+from .utils.calculator import (
+    calc_solve,
+    process_calc_solve
+)
 
 
 # set up the redis client
@@ -25,7 +24,7 @@ MODEL = os.environ["LLM_MODEL_ID"]
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s:%(message)s")
 
-SYSTEM_PROMPT = """You are a math tutor that helps students of all age ranges. You can show live interfaces to the user of mathematic equations as a whiteboard with latex styling.
+SYSTEM_PROMPT = """You are a calculus tutor that helps students. You can show live interfaces to the user of mathematic equations as a whiteboard with LaTeX styling.
 
 ## Style and Tone
 * You should remain friendly and concise.
@@ -60,7 +59,7 @@ Your response must be perfectly formatted JSON with the following structure
 
 Assistant (you): {
 "widgets": [],
-"response": "Hi! I'm your math tutor. I can help explain concepts and work through problems with you using an interactive whiteboard. What would you like to work on today?"
+"response": "Hi! I'm your calculus tutor. I can help explain concepts and work through problems with you using an interactive whiteboard. What would you like to work on today?"
 }
 
 User: Can you explain derivatives?
@@ -114,8 +113,108 @@ Assistant (you): {
 * Use $$ around any latex formatted equations.
 * Use dividers (---) between sections.
 * Make sure to include a response AND whiteboard content with every request.
+* ALWAYS use a single backslash when needed before all latex equations. (i.e. lim should be \lim, frac should be \frac)
 """
-# For 3.3 and later: * Use a single backslash when needed before all latex equations. (i.e. lim should be \lim)
+
+CONTEXT_SYSTEM_PROMPT = """
+# Calculator Tool Instructions
+
+You have a symbolic mathematics calculator that can solve various calculus problems. Here's how to use it:
+
+## Basic Function Signature
+```python
+calc_solve(expression, operation='derivative', point=None, terms=None)
+```
+
+## Valid Operations
+- `derivative`: Find the derivative of an expression
+- `integral`: Find the indefinite integral
+- `limit`: Calculate a limit at a point
+- `series`: Generate a series expansion
+
+## Input Format
+- Use standard mathematical notation with Python syntax
+- Variable should be 'x'
+- Use * for multiplication: `2*x` not `2x`
+- Use ** or ^ for powers: `x**2` or `x^2`
+- Functions available: sin, cos, tan, exp, log, sqrt
+
+## Examples
+
+1. Basic Derivatives
+```python
+calc_solve("x^2 + sin(x)")
+calc_solve("exp(x) + 5*x^3")
+```
+
+2. Integrals
+```python
+calc_solve("3*x^2 + 2*x", operation="integral")
+calc_solve("sin(x)*cos(x)", operation="integral")
+```
+
+3. Limits
+```python
+calc_solve("sin(x)/x", operation="limit", point=0)
+calc_solve("(x^2-1)/(x-1)", operation="limit", point=1)
+```
+
+4. Series Expansions
+```python
+calc_solve("exp(x)", operation="series", point=0, terms=4)
+calc_solve("sin(x)", operation="series", point=0, terms=5)
+```
+
+## Common Functions
+- Trigonometric: sin(x), cos(x), tan(x)
+- Exponential: exp(x)
+- Logarithmic: log(x)
+- Square root: sqrt(x)
+
+## Error Cases to Handle
+- Invalid expressions will return error message
+- Missing required parameters for limit/series will return error
+- Invalid operations will return error message
+
+## Example Usage Sequence
+```python
+# Derivative of polynomial
+calc_solve("x^3 + 2*x^2 - 5*x + 3")
+
+# Integral of trigonometric function
+calc_solve("sin(2*x)", operation="integral")
+
+# Limit of rational function
+calc_solve("(x^2-4)/(x-2)", operation="limit", point=2)
+
+# Series expansion of exponential
+calc_solve("exp(x)", operation="series", point=0, terms=4)
+```
+
+Each result includes:
+1. The original expression
+2. Step-by-step solution process
+3. Final result
+4. Verification when applicable
+
+## Common Patterns and Tips
+1. Always check if required parameters are provided for the operation
+2. Use proper Python syntax for mathematical expressions
+
+# Output Instructions
+
+You are gathering context before you provide a response to the student. You are to determine if your response will require a calculation, and if so, perform it. Otherwise, do nothing.
+
+Your response would require a calculation (or multiple) if the student asked for the solution (final or step by step) to a specific problem, or if they asked for a worked out example.
+
+ONLY output "calc_solve(...)", otherwise, no output is required. Do not try to solve without the function. ONLY use calc_solve if you have been ASKED to solve an equation. 
+
+Use calc_solve always when: 
+- You are asked to generate a solution.
+
+Do not use calc_solve when:
+- You are asked to generate a problem.
+"""
 
 @observability_decorator(name="run_agent")
 async def run_agent(input_dict: dict):
@@ -137,12 +236,51 @@ async def run_agent(input_dict: dict):
         logging.exception(f"An error occurred: {e}")
 
 
-async def single_turn_agent(messages: List[dict], task_id: str):
+async def context_agent(messages: List[dict]):
+
+    messages = copy.deepcopy(messages)
 
     # set up the base messages
     system_prompt = {
         "role": "system",
-        "content": "\n# Instructions\n" + SYSTEM_PROMPT,
+        "content": CONTEXT_SYSTEM_PROMPT
+    }
+
+    messages.insert(0, system_prompt)
+
+    response = client.chat.completions.create(
+        model=os.environ["LLM_MODEL_ID"],
+        messages=messages,
+        max_tokens=500,
+    )
+
+    # get the message
+    response_message = response.choices[0].message.content
+    
+    # log the raw response
+    logging.info(f"Context LLM Response: {response_message}")
+    
+    # try to extract calc_solve calls from the response
+    try:
+        calc_solve_results = process_calc_solve(response_message)
+        if calc_solve_results:
+            logging.info(f"calc_solve executed successfully: {calc_solve_results}")
+            return calc_solve_results
+    except Exception as e:
+        logging.error(f"Error processing calc_solve: {str(e)}")
+    
+    return ""
+
+
+async def single_turn_agent(messages: List[dict], task_id: str):
+
+    # get context
+    results = await context_agent(messages)
+
+    # set up the base messages
+    system_prompt = {
+        "role": "system",
+        "content": "\n# Instructions\n" + SYSTEM_PROMPT + f"\n### Most recent calculation:\n{results}\n",
     }
     first_assistant_message = {
         "role": "assistant",
