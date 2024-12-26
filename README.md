@@ -47,8 +47,11 @@ The speed also enables algebra and calculus problems to first be solved via an i
      LLM_API_KEY="your_groq_api_key_here"
      GROQ_STT_API_KEY="your_groq_api_key_here"
      ```
+
    - Configure TTS settings with your preferred provider (e.g., ElevenLabs)
-   
+   ```
+   ELEVENLABS_API_KEY="your_elevenlabs_api_key"
+   ```
    *You can obtain a Groq API key from the [Groq console](https://console.groq.com/keys)*
 
 4. **Run the Application**
