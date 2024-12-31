@@ -19,19 +19,19 @@ const nextConfig = {
         patterns: [
           {
             from: "./node_modules/onnxruntime-web/dist/ort-wasm.wasm",
-            to: "static/chunks/[name][ext]"
+            to: "static/chunks/app/[name][ext]"
           },
           {
             from: "./node_modules/onnxruntime-web/dist/ort-wasm-simd.wasm",
-            to: "static/chunks/[name][ext]"
+            to: "static/chunks/app/[name][ext]"
           },
           {
             from: "node_modules/@ricky0123/vad-web/dist/vad.worklet.bundle.min.js",
-            to: "static/chunks/[name][ext]"
+            to: "static/chunks/app/[name][ext]"
           },
           {
             from: "node_modules/@ricky0123/vad-web/dist/*.onnx",
-            to: "static/chunks/[name][ext]"
+            to: "static/chunks/app/[name][ext]"
           }
         ]
       })

@@ -7,7 +7,9 @@ services:
       args:
         NEXT_PUBLIC_AGENT: ${NEXT_PUBLIC_AGENT}
     ports:
-      - 3000:3000
+      - "3000:3000"
+    environment:
+      - HOST=0.0.0.0
     env_file:
       - .env
     networks:
@@ -19,7 +21,7 @@ services:
       context: ./xrx-core/orchestrator
       dockerfile: Dockerfile
     ports:
-      - 8000:8000
+      - "8000:8000"
     env_file:
       - .env
     networks:
@@ -31,7 +33,7 @@ services:
       context: .
       dockerfile: reasoning/Dockerfile
     ports:
-      - 8003:8003
+      - "8003:8003"
     env_file:
       - .env
     networks:
@@ -43,7 +45,7 @@ services:
       context: ./xrx-core/stt
       dockerfile: Dockerfile
     ports:
-      - 8001:8001
+      - "8001:8001"
     env_file:
       - .env
     networks:
@@ -55,29 +57,17 @@ services:
       context: ./xrx-core/tts
       dockerfile: Dockerfile
     ports:
-      - 8002:8002
+      - "8002:8002"
     env_file:
       - .env
     networks:
       - xrx_network
 
-  # xrx-guardrails:
-  #   container_name: xrx-guardrails
-  #   build:
-  #     context: ./xrx-core/guardrails-proxy
-  #     dockerfile: Dockerfile
-  #   ports:
-  #     - 8004:8004
-  #   env_file:
-  #     - .env
-  #   networks:
-  #     - xrx_network
-
   xrx-redis:
     image: "redis:alpine"
     container_name: xrx-redis
     ports:
-      - 6379:6379
+      - "6379:6379"
     networks:
       - xrx_network
 
